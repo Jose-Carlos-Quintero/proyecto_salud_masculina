@@ -1,0 +1,271 @@
+---
+title: "Resumen de resultados"
+format:
+  html:
+    theme: darkly
+    number-sections: true
+    embed-resources: true
+    toc: true
+---
+
+```{r}
+#| echo: false
+# Codigo para que no se muestre el codigo de los graficos por default
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+
+# Pregunta de investigación
+
+Todo el análisis estadístico será con el propósito de responder la siguiente pregunta de investigación:
+
+_**¿Qué tan eficaz es la terapia transuretral con vapor de agua Rezūm® en reducir el volumen prostático y mejorar los síntomas urinarios y el flujo miccional en pacientes costarricenses con hiperplasia prostática benigna?**_
+
+# Análisis descriptivo de la base de datos
+
+Para esta investigación se utilizará una base de datos compuesta por hombres mayores de 40 años que participaron en un estudio clínico desarrollado en el Hospital UNIBE. El objetivo principal de dicho estudio fue evaluar la eficacia de la terapia transuretral con vapor de agua Rezūm® en la reducción del volumen prostático en pacientes costarricenses diagnosticados con hiperplasia prostática benigna. La base de datos original contiene 342 observaciones y 19 variables. Entre las variables más relevantes se incluyen el volumen prostático, el flujo miccional y el puntaje IPSS, todas registradas tanto antes como después del tratamiento, así como la edad, el número de aplicaciones realizadas durante una única sesión y la presencia o ausencia de Retención Aguda de Orina (RAO). Para garantizar la integridad de los análisis, se descartaron las observaciones con valores faltantes en las variables clave, resultando en una submuestra final de 291 pacientes.
+
+```{r scripts}
+#| echo: false
+#| results: "hide"
+#| message: false
+#| warning: false
+
+source("cod/limpieza.r")
+source("cod/analisis_descriptivo.r")
+source("cod/analisis.r")
+source("cod/graficos_vars_importantes.r")
+```
+
+```{r}
+#| fig.width: 10
+print(graf.edad)
+```
+El histograma muestra la distribución de edades de los participantes, que oscila entre los 40 y los 100 años. Se observa una mayor concentración de casos entre los 60 y 70 años, indicando que la mayoría de los pacientes pertenecen a un grupo etario adulto mayor. La línea azul vertical señala la media de edad, que es de 64 años, valor consistente con la tendencia central observada en la distribución.
+
+```{r}
+#| fig.width: 10
+print(graf.rao)
+```
+El gráfico de barras muestra la distribución de pacientes según la presencia o ausencia de retención aguda de orina (RAO). Se observa que únicamente 19 participantes presentaban RAO al momento del tratamiento, mientras que 272 no la presentaban. Esto indica que los casos con RAO representan una minoría dentro de la muestra total, lo cual debe tomarse en cuenta al comparar los efectos del tratamiento entre ambos subgrupos.
+
+```{r}
+#| fig.width: 10
+print(graf.rao.porc)
+```
+El gráfico de frecuencias relativas permite visualizar que solo el 6.5% de los pacientes tratados presentó retención aguda de orina (RAO), mientras que el 93.5% no la presentó. Esta representación porcentual facilita interpretar la magnitud relativa del subgrupo con RAO dentro del total de pacientes. Aunque la proporción es baja, es clínicamente relevante ya que estos pacientes podrían mostrar una respuesta diferencial al tratamiento, lo cual justifica su análisis separado en las comparaciones posteriores.
+
+```{r}
+#| fig.width: 10
+print(graf.num.apps)
+```
+En el histograma se observa que la mayoría de las personas recibió entre 4 y 8 aplicaciones, siendo 6 el número más frecuente. La media, marcada por la línea azul, está en 6.51, lo que indica que hay algunos casos con un número mayor de aplicaciones que elevan un poco el promedio. Aunque hay valores más extremos hacia la derecha, son poco comunes. En general, la distribución está algo cargada hacia los valores bajos, pero con una ligera tendencia a la derecha.
+
+```{r}
+#| fig.width: 10
+#| fig.height: 8
+source('cod/matriz_corr.r')
+```
+Esta matriz de correlación se construyó utilizando los valores posteriores al tratamiento de las variables clínicas. En general, se observan correlaciones bajas entre las variables consideradas.
+
+La asociación más evidente es entre edad y volumen prostático posterior (r = 0.21), seguida por una ligera correlación entre edad e IPSS posterior (r = 0.19). Esto sugiere que, después del tratamiento, las personas de mayor edad tienden a conservar un volumen prostático ligeramente mayor y síntomas algo más severos, aunque la relación es débil.
+
+Por su parte, el flujo miccional posterior no muestra correlaciones significativas con ninguna de las otras variables. Incluso tiene una leve correlación negativa con el IPSS (r = -0.13), lo que podría indicar que quienes presentan más síntomas urinarios tienden a tener un flujo más bajo, pero esta relación es muy tenue.
+
+En conjunto, estos resultados indican que tras la intervención, las variables clínicas medidas mantienen una relativa independencia entre sí, al menos en términos de correlación lineal.
+```{r fig.width=10, fig.height=5}
+print(graf.dist.vars)
+```
+El gráfico anterior permite visualizar claramente el efecto del tratamiento con Rezūm® en tres aspectos clínicos fundamentales: el flujo miccional, el puntaje de síntomas urinarios (IPSS) y el volumen prostático. En los tres casos se compara la situación antes y después del procedimiento mediante diagramas de caja, lo cual permite apreciar los cambios en la mediana, la dispersión y la presencia de valores extremos.
+
+En primer lugar, el flujo miccional muestra un incremento evidente luego del tratamiento. La mediana sube de forma considerable, y también se amplía el rango superior, lo cual indica que varios pacientes experimentaron una mejoría marcada en la fuerza del chorro urinario.
+
+Por otro lado, el IPSS disminuye de manera notoria. Tras el tratamiento, la mayoría de los pacientes reportan valores bajos, lo que refleja una reducción importante en los síntomas urinarios. Esta caída en el puntaje sugiere una mejora significativa en la calidad de vida.
+
+Finalmente, el volumen prostático también se reduce visiblemente. La mediana baja de forma clara y hay una menor presencia de valores extremos altos, lo que sugiere que el efecto del tratamiento fue generalizado y consistente en cuanto a la reducción del tamaño de la próstata.
+
+```{r}
+print(graf.dist.vol.edad)
+```
+
+Este otro gráfico muestra cómo varía el volumen prostático promedio antes y después del tratamiento con Rezūm®, según distintos grupos de edad. Se observa una disminución del volumen prostático posterior al tratamiento en todos los rangos etarios, lo que respalda la efectividad general del procedimiento en diferentes etapas de la vida.
+
+En los grupos de menor edad, la reducción es marcada y constante, con un descenso promedio de entre 15 y 20 mL. A medida que aumenta la edad, el volumen prostático inicial tiende a ser mayor, pero el tratamiento sigue logrando reducciones considerables. Sin embargo, en los adultos mayores (especialmente el grupo de 90 a 100 años), aunque se mantiene la disminución, la diferencia entre el volumen previo y posterior se reduce ligeramente, lo que podría reflejar una respuesta más conservadora en pacientes muy longevos.
+
+# Resultados importantes
+
+## Cambios en volumen prostático
+```{r}
+#| fig.width: 10
+
+print(graf.delta.volumen)
+```
+El gráfico muestra la relación entre el volumen prostático antes y después del tratamiento, con cada punto representando a un paciente. La mayoría de los puntos se ubican por debajo de la línea punteada diagonal, lo que indica que la gran mayoría de los pacientes tuvo una reducción en su volumen prostático tras el tratamiento.
+
+Aunque hay algunos pacientes cuyo volumen se mantuvo similar o incluso aumentó ligeramente, estos casos son minoría. La dispersión es mayor en los valores altos de volumen previo, pero la tendencia general es clara: el tratamiento tuvo un efecto reductor en el tamaño prostático en la mayoría de los casos.
+
+```{r}
+print(pruebat.volumen)
+```
+La prueba t pareada muestra que existe una diferencia estadísticamente significativa entre el volumen prostático antes y después del tratamiento (p < 0.001).
+
+En promedio, el volumen se redujo en aproximadamente 21 mL por paciente, con un intervalo de confianza del 95% que va de 19.80 a 22.16 mL. Esto respalda la conclusión de que el tratamiento produjo una reducción clara y consistente del tamaño prostático en la muestra analizada.
+
+```{r}
+print(pruebat.rao.volumen)
+```
+
+No se encontró una diferencia estadísticamente significativa en la reducción del volumen prostático entre los pacientes con y sin RAO (p = 0.197).
+
+Aunque en promedio los pacientes con RAO tuvieron una reducción ligeramente mayor en el volumen (23.3 mL frente a 20.8 mL), esta diferencia es pequeña y puede deberse al azar, ya que el intervalo de confianza (de -6.4 a 1.4 mL) incluye el cero.
+
+Además, vale la pena mencionar que hubo muchos menos pacientes con RAO en comparación con los que no la presentaron, lo que limita la fuerza de la comparación.
+
+En suma, no hay evidencia suficiente para decir que el tratamiento haya tenido un efecto diferente dependiendo de si el paciente presentó o no RAO.
+
+## Cambio en Puntaje Internacional de Síntomas Prostáticos (IPSS)
+```{r}
+#| fig.width: 10
+print(graf.delta.ipss)
+```
+Este gráfico muestra la comparación entre los puntajes IPSS previos y posteriores al tratamiento para cada paciente (cada punto representa una persona). La línea punteada diagonal indica los casos donde no hubo cambio en el puntaje.
+
+La mayoría de los puntos se ubica por debajo de esa línea, lo que indica que los pacientes presentaron una reducción en sus síntomas urinarios tras el tratamiento, es decir, una mejora.
+
+Se observa además que, aunque muchos pacientes partían de puntajes altos (mayores a 20), sus puntajes posteriores tienden a concentrarse en valores bajos, especialmente por debajo de 10, lo cual representa una mejoría clínica importante.
+
+En resumen, el gráfico refleja una tendencia clara a la disminución del puntaje IPSS, lo que sugiere que el tratamiento fue efectivo para reducir los síntomas prostáticos en la mayoría de los casos.
+
+```{r}
+print(pruebat.ipss)
+```
+La prueba t pareada indica que hubo una reducción estadísticamente significativa en los puntajes IPSS tras el tratamiento (p < 0.001).
+
+En promedio, los pacientes redujeron su puntaje en aproximadamente 14.8 puntos, con un intervalo de confianza del 95% entre 14.06 y 15.58 puntos.
+
+Dado que el IPSS mide la severidad de los síntomas urinarios, esta disminución representa una mejoría clínica marcada en la mayoría de los pacientes después del tratamiento.
+
+```{r}
+print(pruebat.rao.ipss)
+```
+Esta prueba compara la reducción en el puntaje IPSS (delta IPSS) entre los pacientes con RAO y sin RAO.
+
+El resultado muestra que no hay una diferencia estadísticamente significativa entre ambos grupos (p = 0.835).
+
+En promedio, los pacientes sin RAO redujeron su IPSS en 14.8 puntos, mientras que los pacientes con RAO lo redujeron en 15.1 puntos, una diferencia mínima de apenas 0.3 puntos.
+
+El intervalo de confianza (de –3.33 a 2.72) incluye el cero, lo que confirma que esta diferencia puede explicarse completamente por el azar.
+
+Además, como se ha mencionado antes, el grupo con RAO está formado por muchos menos pacientes, lo que limita la potencia estadística para detectar diferencias reales.
+
+Asi pues, no hay evidencia de que la mejoría en los síntomas urinarios (medida por el IPSS) haya sido distinta según la presencia o ausencia de RAO.
+## Cambio en el flujo miccional
+```{r}
+#| fig.width: 10
+print(graf.delta.flujo)
+```
+Este gráfico muestra la comparación del flujo miccional (en mL/s) antes y después del tratamiento para cada paciente.
+
+La mayoría de los puntos se encuentran por encima de la línea punteada, lo que indica que la gran mayoría de los pacientes experimentó una mejoría en su flujo urinario tras el procedimiento.
+
+Además, se observa que incluso los pacientes que partían con flujos bajos (menos de 10 mL/s) lograron mejorar, y en muchos casos alcanzaron valores por encima de 20 mL/s.
+
+En conjunto, este patrón sugiere que el tratamiento tuvo un efecto positivo y consistente sobre la capacidad de orinar con mayor fuerza o volumen por segundo.
+
+```{r}
+print(pruebat.flujo)
+```
+La diferencia promedio en el flujo miccional antes y después del tratamiento fue de 7.63 mL/s, siendo este valor significativamente mayor en la medición posterior.
+
+El valor p (< 2.2e-16) indica una diferencia estadísticamente significativa en los promedios, y el intervalo de confianza del 95% (entre -8.08 y -7.19 mL/s) no incluye el cero, lo cual respalda esta conclusión.
+
+En otras palabras, el tratamiento logró mejorar de forma consistente y significativa el flujo urinario de los pacientes, con una mejora promedio de más de 7 mL/s.
+
+```{r}
+print(pruebaw.rao.flujo)
+```
+La prueba Wilcoxon (la cual fue usada dado que el cambio en el flujo miccional no presenta una distribución normal) no muestra evidencia de una diferencia estadísticamente significativa entre los grupos (p = 0.7593). Esto quiere decir que, en términos de mejora en el flujo miccional, los pacientes con RAO y sin RAO respondieron de forma similar al tratamiento.
+
+El uso de la prueba de Wilcoxon es apropiado aquí si se sospecha que la variable no sigue una distribución normal. Sin embargo, el resultado sugiere que la presencia de RAO no está asociada con una mejoría diferencial en el flujo urinario.
+
+# Modelos de regresión linea
+Se construyeron modelo de regresión lineal para explicar el cada variable importante (volumen prostático, ipss, flujo miccional) después del tratamiento, considerando como variables explicativas la cantidad de aplicaciones, la edad del paciente, el volumen prostático previo, el puntaje IPSS previo y el flujo miccional previo.
+
+
+## Volumen
+
+```{r}
+summary(modelo.volumen)
+par(mfrow = c(2, 2))
+plot(modelo.volumen)
+```
+### Resultados principales:
+
+- El **volumen prostático previo** fue, como era de esperarse, el predictor más fuerte y significativo (_p_ < 2e-16). El coeficiente estimado fue de 0.51, lo que indica que por cada mililitro adicional antes del tratamiento, el volumen posterior tiende a aumentar en promedio 0.51 mL.
+  
+- La **edad** también resultó significativa (_p_ = 0.011), con un coeficiente positivo de 0.125. Esto sugiere que a mayor edad, se espera un ligero aumento en el volumen prostático posterior, manteniendo constantes las demás variables.
+
+- El **número de aplicaciones** mostró una relación negativa y significativa (_p_ = 0.036). En promedio, cada aplicación adicional se asocia con una reducción de 0.52 mL en el volumen posterior, lo que podría reflejar un efecto acumulativo beneficioso del tratamiento.
+
+- En contraste, ni el **IPSS previo** ni el **flujo miccional previo** fueron significativos (_p_ > 0.1), lo que indica que, al considerar simultáneamente las otras variables, no parecen tener un impacto relevante sobre el volumen prostático posterior.
+
+### Rendimiento del modelo:
+
+- R² ajustado: **0.578**, lo que indica que el modelo explica aproximadamente un 58% de la variabilidad en el volumen prostático posterior.
+
+- Error estándar residual: **5.669 mL**
+
+## IPSS
+
+```{r}
+summary(modelo.ipss)
+par(mfrow = c(2, 2))
+plot(modelo.volumen)
+```
+### Resultados principales
+
+- El **IPSS previo** fue el predictor más significativo (_p_ = 0.00146). Su coeficiente positivo de **0.09811** indica que, en promedio, por cada punto adicional en el IPSS antes del tratamiento, el puntaje posterior aumenta cerca de 0.1 puntos, manteniendo constantes las demás variables.
+
+- El **número de aplicaciones** también resultó estadísticamente significativo (_p_ = 0.00659) y tuvo un coeficiente negativo (**–0.33**), lo que sugiere que más aplicaciones se asocian con una mayor reducción del IPSS posterior, lo cual podría reflejar una mejora sintomática con aplicaciones repetidas.
+
+- La **edad** fue otro factor relevante (_p_ = 0.00433), con un coeficiente positivo de **0.0689**. Esto sugiere que, a mayor edad, el IPSS posterior tiende a ser ligeramente más alto, lo que podría relacionarse con la progresión natural de la condición.
+
+- El **volumen prostático previo** se acercó a la significancia (_p_ = 0.06288), con un coeficiente positivo de **0.03466**, lo que sugiere una posible asociación débil entre mayor volumen inicial y mayor IPSS posterior, aunque esta relación no es concluyente.
+
+- Por último, el **flujo miccional previo** no fue un predictor significativo (_p_ = 0.49485), por lo que no parece tener un impacto relevante sobre el IPSS posterior dentro del contexto de este modelo.
+
+### Rendimiento del modelo
+
+- **R² ajustado:** 0.1101. El modelo explica alrededor del 11% de la variabilidad en los puntajes de IPSS posterior, lo que sugiere que hay muchos otros factores no considerados que podrían influir en este desenlace.
+
+- **Error estándar residual:** 2.763 puntos
+
+## Flujo miccional
+
+```{r}
+summary(modelo.flujo)
+par(mfrow = c(2, 2))
+plot(modelo.volumen)
+```
+### Resultados principales
+
+- El **flujo miccional previo** fue el único predictor significativamente asociado al flujo posterior (_p_ < 2e-16). Su coeficiente positivo (**1.061**) indica que, en promedio, por cada mL/s adicional de flujo antes del tratamiento, el flujo posterior aumenta aproximadamente 1.06 mL/s, manteniendo constantes las demás variables. Esta fuerte relación era esperable, dado que el flujo previo es un buen indicador del punto de partida funcional de cada paciente.
+
+- Ninguna de las otras variables del modelo resultó significativa:
+  - El **número de aplicaciones** (_p_ = 0.774)
+  - La **edad** (_p_ = 0.576)
+  - El **volumen prostático previo** (_p_ = 0.479)
+  - El **IPSS previo** (_p_ = 0.965)
+
+  Esto sugiere que, una vez tomado en cuenta el flujo inicial, estos factores no aportan información adicional relevante para predecir el resultado final del flujo miccional.
+
+### Rendimiento del modelo
+
+- **R² ajustado:** 0.6197, lo que indica que el modelo explica aproximadamente un 62% de la variabilidad en el flujo posterior.
+
+- **Error estándar residual:** 3.705 mL/s
+
+
+
+
+
