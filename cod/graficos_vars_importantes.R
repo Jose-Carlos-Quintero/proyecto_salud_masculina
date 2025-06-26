@@ -179,4 +179,41 @@ graf.dist.vars <- ggplot(datos.largo, aes(x = momento, y = valor, fill = momento
     axis.text.x = element_text(size = 20, color = 'black'),
     axis.text.y = element_text(size = 20, color = 'black'),
   )
+
+#Grafico de comparacion dentre volumen prostatico promedio previo y posterior por grupo etario
+datos.largo <- datos %>%
+  select(edad, volumen.previo, volumen.posterior) %>%
+  pivot_longer(
+    cols = c(volumen.previo, volumen.posterior),
+    names_to = "momento",
+    values_to = "volumen"
+  ) %>%
+  mutate(grupo.edad = cut(edad, breaks = seq(40, 100, by = 10))) %>%
+  mutate(momento = recode(
+    momento,
+    "volumen.previo" = "Previo",
+    "volumen.posterior" = "Posterior"
+  )) %>%
+  mutate(momento = fct_relevel(momento, "Previo", "Posterior"))
+
+graf.dist.vol.edad <- ggplot(datos.largo, aes(x = grupo.edad, y = volumen, fill = momento)) +
+  stat_summary(fun = mean,
+               geom = "col",
+               position = "dodge") +
+  scale_fill_manual(values = c("Previo" = "#515151", "Posterior" = "gray")) +
+  labs(x = "Grupo de edad", y = "Volumen prostático promedio (mL)", fill = "Momento de medición") +
+  theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    axis.text.y = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
+    axis.text.x = element_text(size = 20),
+    axis.title.x = element_text(size = 20),
+    legend.position = 'top',
+    legend.text = element_text(size = 20),
+    legend.title = element_text(size = 20)
+  )
+
 rm(datos.largo)
