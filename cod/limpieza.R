@@ -9,19 +9,26 @@ datos <- datos %>% select(
   volumen.previo = volpre,
   volumen.posterior = volpost,
   rao,
+  num.aplicaciones = aplicaciones,
   ipss.previo = ipsspre,
   ipss.posterior = ipsspost,
   flujo.previo = flujopre2,
-  flujo.posterior = flujopost
+  flujo.posterior = flujopost,
+  complicaciones
 )
 
 #Se transforman las observaciones sin edad para que se tenga la edad promedio y el rao se codifica como un booleano
 datos <- datos %>%
   mutate(edad = if_else(is.na(edad), round(mean(edad, na.rm = TRUE)), edad)) %>%
-  mutate(rao = if_else(is.na(rao), 0, rao, )) %>% 
+  mutate(rao = if_else(is.na(rao), 0, rao)) %>% 
   mutate(delta.volumen = volumen.previo - volumen.posterior) %>% 
   mutate(delta.ipss = ipss.previo - ipss.posterior) %>% 
-  mutate(delta.flujo = flujo.previo - flujo.posterior)
+  mutate(delta.flujo = flujo.previo - flujo.posterior) %>% 
+  mutate(complicaciones = case_when(
+    is.na(complicaciones) ~ "Sin complicaciones",
+    complicaciones %in% c("no", "No") ~ "Sin complicaciones",
+    TRUE ~ "Con complicaciones"
+  ))
 
 #Se eliminan observaciones que no contribuyen información de volumen, ipss ni flujo
 datos <- datos %>%
