@@ -1,0 +1,13 @@
+library(here)
+source(here("cod", "analisis_descriptivo.R"))
+source(here("cod", "graficos_vars_importantes.R"))
+
+guardar_grafico(graf.delta.flujo,"disp_cambio_flujo")
+guardar_grafico(graf.delta.ipss, "disp_cambio_ipss")
+guardar_grafico(graf.delta.volumen, "disp_cambio_volumen")
+guardar_grafico(graf.dist.vars, "box_cambio_vars")
+guardar_grafico(graf.dist.vol.edad,"col_dist_vol_edad")
+guardar_grafico(graf.edad, "hist_edad")
+guardar_grafico(graf.num.apps, "hist_num_apps")
+guardar_grafico(graf.rao, "col_abs_rao")
+guardar_grafico(graf.rao.porc, "col_rel_rao")
