@@ -1,7 +1,7 @@
 #Se ejecuta la limpieza de la base de datos
 library(here)
 source(here("cod", "limpieza.R"))
-
+library(xtable)
 
 #Pruebas estadisticas utilizadas:
 # - t de student pareada
